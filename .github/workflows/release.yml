@@ -1,0 +1,19 @@
+name: "Release"
+
+on:
+  pull_request:
+    branches:
+    - master
+  push:
+    branches:
+      - master
+
+jobs:
+  release:
+    name: "Release"
+
+    runs-on: "ubuntu-latest"
+
+    steps:
+      - name: "Hello World"
+        run: "echo Hello World"
