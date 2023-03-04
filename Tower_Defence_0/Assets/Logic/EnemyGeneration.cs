@@ -3,49 +3,32 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
+using static UnityEngine.EventSystems.EventTrigger;
 
 public class EnemyGeneration : MonoBehaviour
 {
-    public GameObject entityPrefab;
-    public int numEntities = 10;
-    public float xMin;
-    public float xMax;
-    public string objectName = "Enemy";
+    [SerializeField] private Goblin goblinPrefab;
+    [SerializeField] private Orc orcPrefab;
 
-    public static bool isEnemyGenerated = false;
-
+    private float xMin;
+    private float xMax;
     void Start()
     {
-        Instantiate(GenerateGoblin(), GetRandomPositionX(), Quaternion.identity);
+        //goblinPrefab = GameObject.Find("Goblin");
+        //orcPrefab = GameObject.Find("Orc");
 
-        //if (goblin != null && !isEnemyGenerated)
-        //{
-        //    for (int i = 0; i < numEntities; i++)
-        //    {
-        //        Vector3 position = new Vector3(UnityEngine.Random.Range(xMin, xMax), 0f, 0f);
-
-        //        Instantiate(enemyObject, position, enemyObject.transform.rotation);
-        //    }
-        //    isEnemyGenerated = true;
-        //}
-        //else
-        //{
-        //    Debug.LogError("Object named " + objectName + " not found!");
-        //}
-
-
+        StartCoroutine(SpawnObjects(goblinPrefab, 10, 2));
+        StartCoroutine(SpawnObjects(orcPrefab, 5, 2));
     }
 
-    private Goblin GenerateGoblin()
+    IEnumerator SpawnObjects(Enemy enemy, int enemyAmount, int delay)
     {
-        GameObject goblinGameObject = new GameObject("Goblin");
-        goblinGameObject.transform.position = GetRandomPositionX();
+        for (int i = 0; i < enemyAmount; i++)
+        {
+            Instantiate(enemy, GetRandomPositionX(), Quaternion.identity);
 
-        goblinGameObject.AddComponent<SpriteRenderer>();
-        goblinGameObject.AddComponent<BoxCollider2D>();
-        goblinGameObject.AddComponent<Rigidbody2D>();
-
-        return goblinGameObject.AddComponent<Goblin>();
+            yield return new WaitForSeconds(delay);
+        }
     }
 
     private Vector3 GetRandomPositionX()
